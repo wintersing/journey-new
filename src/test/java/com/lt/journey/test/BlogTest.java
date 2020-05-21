@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ui.Model;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring-*.xml")
+@ContextConfiguration(locations = "classpath:applicationContext.xml")
 public class BlogTest {
 
 	private static final Model model = null;
