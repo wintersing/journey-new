@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lt.journey.mapper.HotelMapper">
+	<insert id="addHotel" parameterType="java.util.List">
+		INSERT IGNORE INTO hotel
+		(id,brandName,
+		geoPointID,openingHours,
+		rating,tags,
+		facilities,infrastructures,
+		assistServices,city,description,
+		price,`level`,
+		telephones,district,
+		address,title,
+		imageUrls,recommend
+		)
+		values
+		<foreach collection="list" item="hotelDes" separator=",">
+			(
+			#{hotelDes.id},
+			#{hotelDes.brandName},
+			(SELECT
+				id
+			FROM
+				geopoint
+			WHERE
+				lon = ${hotelDes.geoPoint.lon}
+			AND lat = ${hotelDes.geoPoint.lat}),
+			#{hotelDes.openingHours},
+			#{hotelDes.rating},
+			#{hotelDes.tags},
+			#{hotelDes.facilities},
+			#{hotelDes.infrastructures},
+			#{hotelDes.assistServices},
+			#{hotelDes.city},
+			#{hotelDes.description},
+			#{hotelDes.price},
+			#{hotelDes.level},
+			#{hotelDes.telephones},
+			#{hotelDes.district},
+			#{hotelDes.address},
+			#{hotelDes.title},
+			#{hotelDes.imageUrls},
+			#{hotelDes.recommend})
+		</foreach>
+	</insert>
+	
+	
+	<select id="findHotelDes" parameterType="java.lang.String" resultType="Hotel" >
+		select 
+			*
+		from 
+			hotel 
+		where 
+			id = #{id}
+	</select>
+
+    <select id="findHotels" parameterType="HotelParam" resultType="Hotel" >
+		select
+			*
+		from
+			hotel
+		where
+		1 = 1
+		<if test="hotelParam.id != null and hotelParam.id != ''">
+			and id = #{hotelParam.id}
+        </if>
+        <if test="hotelParam.city != null and hotelParam.city != ''">
+            and city like CONCAT(#{hotelParam.city},'%')
+        </if>
+        <if test="hotelParam.level != null and hotelParam.level != ''">
+            and `level` = #{hotelParam.level}
+        </if>
+        <if test="hotelParam.brandName != null and hotelParam.brandName != ''">
+            and brandName = #{hotelParam.brandName}
+        </if>
+	</select>
+</mapper>
+
+
+
+
+

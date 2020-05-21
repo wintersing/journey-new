@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lt.journey.mapper.BlogMapper">
+
+	<insert id="addBlog" parameterType="java.util.List">
+		INSERT IGNORE INTO blog
+		(
+			id,publishDate,imageUrls,
+			avatarUrl,likeCount,cityid,
+			commentCount,viewCount,favoriteCount,
+			city,title,posterId,publishDateStr,
+			posterScreenName,content,recommend
+		)
+		values
+		<foreach collection="list" item="blog" separator=",">
+			(
+				#{blog.id},#{blog.publishDate},#{blog.imageUrls},
+				#{blog.avatarUrl},#{blog.likeCount},#{blog.cityid},
+				#{blog.commentCount},#{blog.viewCount},#{blog.favoriteCount},
+				#{blog.city},#{blog.title},#{blog.posterId},#{blog.publishDateStr},
+				#{blog.posterScreenName},#{blog.content},#{blog.recommend}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

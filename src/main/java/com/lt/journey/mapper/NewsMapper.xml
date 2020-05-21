@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lt.journey.mapper.NewsMapper">
+
+	<insert id="addNews" parameterType="java.util.List">
+		INSERT IGNORE INTO news(id, title, url, catLabel2, recommend) values
+		<foreach collection="list" item="news" separator=",">
+			(
+				#{news.id},#{news.title},#{news.url},#{news.catLabel2},#{news.recommend}
+			)
+		</foreach>
+	</insert>
+</mapper>

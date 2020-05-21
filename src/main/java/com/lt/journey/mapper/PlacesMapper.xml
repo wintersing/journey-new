@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lt.journey.mapper.PlacesMapper">
+    <insert id="addPlaces" parameterType="java.util.List">
+        INSERT IGNORE INTO places
+        (`id`,`location`,`rating`,`country`,title,subtitle,city,imageUrls,tipInfo,
+        openingHours,description,price,commentCount,recommend,geoPointID)
+        values
+        <foreach collection="list" item="placesDes" separator=",">
+            (
+            #{placesDes.id},
+            #{placesDes.location},
+            #{placesDes.rating},
+            #{placesDes.country},
+            #{placesDes.title},
+            #{placesDes.subtitle},
+            #{placesDes.city},
+            #{placesDes.imageUrls},
+            #{placesDes.tipInfo},
+            #{placesDes.openingHours},
+            #{placesDes.description},
+            #{placesDes.price},
+            #{placesDes.commentCount},
+            #{placesDes.recommend},
+            (SELECT `id` as `geoPointID` from geopoint where
+            `lon` = ${placesDes.geoPoint.lon} AND `lat` = ${placesDes.geoPoint.lat}))
+        </foreach>
+    </insert>
+
+    <resultMap type="PlacesDes" id="placesDesToGeoPoint">
+        <id column="id" property="id"/>
+        <result column="location" property="location"/>
+        <result column="rating" property="rating"/>
+        <result column="country" property="country"/>
+        <result column="title" property="title"/>
+        <result column="subtitle" property="subtitle"/>
+        <result column="city" property="city"/>
+        <result column="imageUrls" property="imageUrls"/>
+        <result column="tipInfo" property="tipInfo"/>
+        <result column="openingHours" property="openingHours"/>
+        <result column="description" property="description"/>
+        <result column="price" property="price"/>
+        <result column="commentCount" property="commentCount"/>
+        <result column="recommend" property="recommend"/>
+        <!--<result column="keyValues" property="keyValues"/>-->
+        <association property="geoPoint" javaType="GeoPoint">
+            <id column="id" property="id"/>
+            <result column="lon" property="lon"/>
+            <result column="lat" property="lat"/>
+        </association>
+    </resultMap>
+    <select id="findPlacesDes" parameterType="java.lang.String" resultMap="placesDesToGeoPoint">
+		select * from places p, geopoint g where p.geoPointID = g.id AND p.id = #{id}
+	</select>
+    <select id="findPlaces" parameterType="PlacesParam" resultType="Places">
+        select * from places
+        <where>
+            1 = 1
+            <if test="placesParam.id != null and placesParam.id != ''">
+                and id = #{placesParam.id}
+            </if>
+            <if test="placesParam.cityName != null and placesParam.cityName != ''">
+                and city = #{placesParam.cityName}
+            </if>
+        </where>
+    </select>
+</mapper>
